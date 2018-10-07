@@ -90,5 +90,69 @@ public class Menu {
         }
 
     }
+    
+    private class HeartHealthyIterator implements MenuIterator {
+
+        int index = 0;
+        int end;
+
+        public HeartHealthyIterator(int end) {
+            this.end = arr.length;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index <= end;
+        }
+
+        @Override
+        public MenuItem next() {
+            MenuItem item = arr[index];
+            while (index < arr.length) {
+                if (item.getHeartHealthy()) {
+                    index++;
+                    return item;
+                } else {
+                    index++;
+                    next();
+                }
+            }
+            throw new NoSuchElementException();
+        }
+
+    }
+    
+    private class PriceIterator implements MenuIterator {
+
+        int index = 0;
+        int end;
+        double price;
+
+        public PriceIterator(int end, double price) {
+            this.end = arr.length;
+            this.price = price;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index <= end;
+        }
+
+        @Override
+        public MenuItem next() {
+            MenuItem item = arr[index];
+            while (index < arr.length) {
+                if (item.getPrice() < price) {
+                    index++;
+                    return item;
+                } else {
+                    index++;
+                    next();
+                }
+            }
+            throw new NoSuchElementException();
+        }
+
+    }
 
 }

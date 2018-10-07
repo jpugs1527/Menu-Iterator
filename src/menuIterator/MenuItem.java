@@ -11,11 +11,11 @@ package menuIterator;
  */
 public class MenuItem {
     private String itemName;
-    private String price;
+    private double price;
     private int category;
     private boolean heartHealthy;
     
-    public MenuItem(String itemName, String price, int category, boolean heartHealthy) {
+    public MenuItem(String itemName, double price, int category, boolean heartHealthy) {
         this.itemName = itemName;
         this.price = price;
         this.category = category;
@@ -26,7 +26,7 @@ public class MenuItem {
         return itemName;
     }
     
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
     
