@@ -14,11 +14,11 @@ public class Menu {
     public static final int APPETIZER = 1;
     public static final int MAIN_DISH = 2;
     public static final int DESSERT = 3;
-    public static boolean HEARTHEALTHY = false;
-    //public static final boolean NOTHEARTHEALTHY = false;
+    public static boolean HEARTHEALTHY = true;
+    public static final boolean NOTHEARTHEALTHY = false;
 
     public Menu() {
-        arr = new MenuItem[5];
+        arr = new MenuItem[50];
     }
 
     //Maybe refactor to use an ArrayUtils method
@@ -31,128 +31,115 @@ public class Menu {
         arr = ArrayUtils.removeElement(arr, item);
     }
 
-    private class AllItemsIterator implements MenuIterator {
+    public MenuIterator allItemsIterator() {
 
-        int index = 0;
-        int end;
+        this.index = 0;
+        int end = arr.length;
         MenuItem item;
+        return new MenuIterator() {
+            @Override
+            public boolean hasNext() {
+                return index <= end;
+            }
 
-        public AllItemsIterator(int end) {
-            this.end = arr.length;
-        }
+            @Override
+            public MenuItem next() {
+                if (index < 0) {
+                    throw new NoSuchElementException();
+                } else {
+                    MenuItem nextItem = arr[index];
+                    index++;
+                    return nextItem;
+                }
+            }
+        };
+    }
 
-        @Override
-        public boolean hasNext() {
-            return index <= end;
-        }
+    public MenuIterator itemIterator(int category) {
 
-        @Override
-        public MenuItem next() {
-            if (index < 0) {
+        this.index = 0;
+        int end = arr.length;
+        int itemType = category;
+
+        return new MenuIterator() {
+            @Override
+            public boolean hasNext() {
+                return index <= end;
+            }
+
+            @Override
+            public MenuItem next() {
+                MenuItem item = arr[index];
+                while (index < arr.length) {
+                    if (item.getCategory() == itemType) {
+                        index++;
+                        return item;
+                    } else {
+                        index++;
+                        next();
+                    }
+                }
                 throw new NoSuchElementException();
-            } else {
-                MenuItem nextItem = arr[index];
-                index++;
-                return nextItem;
             }
-        }
+        };
+
     }
 
-    private class ItemIterator implements MenuIterator {
+    public MenuIterator heartHealthyIterator() {
 
-        int index = 0;
-        int end;
-        int itemType;
+        this.index = 0;
+        int end = arr.length;
 
-        public ItemIterator(int end, int itemType) {
-            this.end = arr.length;
-            this.itemType = itemType;
-        }
+        return new MenuIterator() {
+            @Override
+            public boolean hasNext() {
+                return index <= end;
+            }
 
-        @Override
-        public boolean hasNext() {
-            return index <= end;
-        }
-
-        @Override
-        public MenuItem next() {
-            MenuItem item = arr[index];
-            while (index < arr.length) {
-                if (item.getCategory() == itemType) {
-                    index++;
-                    return item;
-                } else {
-                    index++;
-                    next();
+            @Override
+            public MenuItem next() {
+                MenuItem item = arr[index];
+                while (index < arr.length) {
+                    if (item.getHeartHealthy()) {
+                        index++;
+                        return item;
+                    } else {
+                        index++;
+                        next();
+                    }
                 }
+                throw new NoSuchElementException();
             }
-            throw new NoSuchElementException();
-        }
+        };
 
     }
-    
-    private class HeartHealthyIterator implements MenuIterator {
 
-        int index = 0;
-        int end;
+    public MenuIterator priceIterator(double passedPrice) {
 
-        public HeartHealthyIterator(int end) {
-            this.end = arr.length;
-        }
+        this.index = 0;
+        int end = arr.length;
+        double price = passedPrice;
 
-        @Override
-        public boolean hasNext() {
-            return index <= end;
-        }
+        return new MenuIterator() {
+            @Override
+            public boolean hasNext() {
+                return index <= end;
+            }
 
-        @Override
-        public MenuItem next() {
-            MenuItem item = arr[index];
-            while (index < arr.length) {
-                if (item.getHeartHealthy()) {
-                    index++;
-                    return item;
-                } else {
-                    index++;
-                    next();
+            @Override
+            public MenuItem next() {
+                MenuItem item = arr[index];
+                while (index < arr.length) {
+                    if (item.getPrice() < price) {
+                        index++;
+                        return item;
+                    } else {
+                        index++;
+                        next();
+                    }
                 }
+                throw new NoSuchElementException();
             }
-            throw new NoSuchElementException();
-        }
-
+        };
     }
-    
-    private class PriceIterator implements MenuIterator {
-
-        int index = 0;
-        int end;
-        double price;
-
-        public PriceIterator(int end, double price) {
-            this.end = arr.length;
-            this.price = price;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return index <= end;
-        }
-
-        @Override
-        public MenuItem next() {
-            MenuItem item = arr[index];
-            while (index < arr.length) {
-                if (item.getPrice() < price) {
-                    index++;
-                    return item;
-                } else {
-                    index++;
-                    next();
-                }
-            }
-            throw new NoSuchElementException();
-        }
-
-    }
-
 }
