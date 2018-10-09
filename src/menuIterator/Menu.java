@@ -17,34 +17,33 @@ public class Menu {
     public static boolean HEARTHEALTHY = true;
     public static final boolean NOTHEARTHEALTHY = false;
 
-    public Menu() {
-        arr = new MenuItem[50];
+    public Menu(int menuSize) {
+        arr = new MenuItem[menuSize];
     }
 
     //Maybe refactor to use an ArrayUtils method
     public void append(MenuItem item) {
+
         arr[index] = item;
         index++;
     }
 
     public void remove(MenuItem item) {
-        arr = ArrayUtils.removeElement(arr, item);
+
     }
 
     public MenuIterator allItemsIterator() {
 
         this.index = 0;
-        int end = arr.length;
-        MenuItem item;
         return new MenuIterator() {
             @Override
             public boolean hasNext() {
-                return index <= end;
+                return index < arr.length;
             }
 
             @Override
             public MenuItem next() {
-                if (index < 0) {
+                if (index >= arr.length) {
                     throw new NoSuchElementException();
                 } else {
                     MenuItem nextItem = arr[index];
@@ -58,26 +57,25 @@ public class Menu {
     public MenuIterator itemIterator(int category) {
 
         this.index = 0;
-        int end = arr.length;
-        int itemType = category;
+        final int itemType = category;
 
         return new MenuIterator() {
             @Override
             public boolean hasNext() {
-                return index <= end;
+                return index < arr.length;
             }
 
             @Override
             public MenuItem next() {
-                MenuItem item = arr[index];
-                while (index < arr.length) {
-                    if (item.getCategory() == itemType) {
-                        index++;
-                        return item;
-                    } else {
-                        index++;
-                        next();
-                    }
+                if (index >= arr.length) {
+                    throw new NoSuchElementException();
+                } else if (itemType == arr[index].getCategory()) {
+                    MenuItem nextItem = arr[index];
+                    index++;
+                    return nextItem;
+                } else if (this.hasNext()){
+                    index++;
+                    return next();
                 }
                 throw new NoSuchElementException();
             }
@@ -88,26 +86,26 @@ public class Menu {
     public MenuIterator heartHealthyIterator() {
 
         this.index = 0;
-        int end = arr.length;
 
         return new MenuIterator() {
             @Override
             public boolean hasNext() {
-                return index <= end;
+                return index < arr.length;
             }
 
             @Override
             public MenuItem next() {
                 MenuItem item = arr[index];
-                while (index < arr.length) {
-                    if (item.getHeartHealthy()) {
-                        index++;
+                index++;
+                    if (!(index < arr.length)) {
+                        throw new NoSuchElementException();
+                    }else if (item.getHeartHealthy()) {
+
                         return item;
-                    } else {
-                        index++;
-                        next();
+                    } else if (this.hasNext()) {
+                        return next();
                     }
-                }
+                index = 0;
                 throw new NoSuchElementException();
             }
         };
@@ -117,28 +115,29 @@ public class Menu {
     public MenuIterator priceIterator(double passedPrice) {
 
         this.index = 0;
-        int end = arr.length;
-        double price = passedPrice;
+        final double price = passedPrice;
 
         return new MenuIterator() {
             @Override
             public boolean hasNext() {
-                return index <= end;
+                return index < arr.length;
             }
 
             @Override
             public MenuItem next() {
                 MenuItem item = arr[index];
-                while (index < arr.length) {
-                    if (item.getPrice() < price) {
-                        index++;
-                        return item;
-                    } else {
-                        index++;
-                        next();
-                    }
+                if (!(index < arr.length)) {
+                    throw new NoSuchElementException();
+                }else if (item.getPrice() < price) {
+                    index++;
+                    return item;
+                } else if (this.hasNext()) {
+                    index++;
+                    return next();
                 }
+                index = 0;
                 throw new NoSuchElementException();
+
             }
         };
     }
