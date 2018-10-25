@@ -10,6 +10,7 @@ You are to design and implement a Menu class, and associated iterator classes, t
 • Category (appetizer, main dish, dessert)
 • Heart healthy
 • Price
+
 The Menu class must provide getter (factory) methods for producing the following types of iterators:
 • AllItemsIterator
 Iterates over all of the items on the menu
@@ -20,6 +21,7 @@ Iterates over a specified item type
 Iterates over the heart healthy items on the menu
 • PriceIterator
 Iterates over the main dishes that are under a specified price
+
 In addition, the Menu class should provide the following static constants:
 public static final int APPETIZERS = 1;
 public static final int MAIN_DISH = 2;
